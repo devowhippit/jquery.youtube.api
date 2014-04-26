@@ -27,9 +27,10 @@ function forEachElement( selector , fn ) {
 
 forEachElement( videoPlaylistPills , function( el , i ) {
   var rel = el.querySelectorAll( '[rel]' )[ 0 ].rel;
-  videoPlaylist.push( el.querySelectorAll( '[rel]' )[ 0 ].rel );
   if ( videoPlaylist.indexOf( rel ) > 0 ) {
     el.parentNode.removeChild( el );
+  } else {
+    videoPlaylist.push( rel );
   }
 });
 
@@ -57,8 +58,8 @@ var playerControls = {
   theme           :'dark',  // dark || light | Dark/Light Theme Options. Default: 'dark'
   list            : null,
   listType        : null,
-  playlist        : videoPlaylist,
-  quality         :'hd1080', // hd1080 || hd720 || large || medium || small
+  playlist        : videoPlaylist.toString(),
+  quality         :'highres', // highres || hd1080 || hd720 || large || medium || small
   pills           : videoPlaylistPills,
   videoMute       : videoMute,
   videoUnMute     : videoUnMute,
@@ -90,7 +91,6 @@ function onYouTubeIframeAPIReady() {
     }
   });
 }
-
 
 ( function( $ ) {
 
@@ -138,6 +138,7 @@ function onYouTubeIframeAPIReady() {
       $pills.eq( player.getPlaylistIndex() ).addClass( 'active' );
       $body.addClass( 'videoUnMuted' );
 
+
       /**
        * Play Video defined by it's index in a playlist
        * @param  {int} videoIndex index of the video in playlist
@@ -150,13 +151,15 @@ function onYouTubeIframeAPIReady() {
         th.player.playVideoAt( $( this ).index() );
       });
 
+
+      /**
+       * [description]
+       * @return null
+       */
       $( '[class*="youtube"]' ).bind( 'click' , function( event ) {
 
         event.preventDefault();
         eclassName = event.currentTarget.className;
-
-        console.log( eclassName );
-        console.log( th.playerConfig.videoPrevious );
 
         if ( eclassName.indexOf( th.playerConfig.videoPrevious.replace( '.' , '' ) ) > -1 ) {
           th.player.previousVideo();
@@ -176,7 +179,7 @@ function onYouTubeIframeAPIReady() {
           $body.removeClass( 'videoMuted' ).addClass( 'videoUnMuted' );
         }
 
-      } );
+      });
 
 
       /**
@@ -194,6 +197,7 @@ function onYouTubeIframeAPIReady() {
           th.player.setVolume( $( this ).val() );
         }
       });
+
 
     };
 
